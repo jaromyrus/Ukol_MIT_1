@@ -1,1 +1,1 @@
-# Ukol_MIT_1
+# Přepínání LED diod pomocí tlačítka na NUCLEO STM8

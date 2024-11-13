@@ -6,11 +6,12 @@
 void init(void) {
     CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); // Taktování MCU na 16MHz
 
-    GPIO_Init(BTN_PORT, BTN_PIN, GPIO_MODE_IN_FL_NO_IT);
-
-    GPIO_Init(GPIOB, GPIO_PIN_2, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(GPIOB, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(GPIOB, GPIO_PIN_4, GPIO_MODE_OUT_PP_LOW_SLOW);
+    #define LED1_PORT GPIOB
+    #define LED1_PIN GPIO_PIN_1
+    #define LED2_PORT GPIOB
+    #define LED2_PIN GPIO_PIN_2
+    #define LED3_PORT GPIOB
+    #define LED3_PIN GPIO_PIN_3
 
     init_milis();
 }
@@ -23,8 +24,8 @@ int main(void) {
     init();
 
     while (1) {
-        BTNstate = GPIO_ReadInputPin(BTN_PORT, BTN_PIN);
-
+        BTNstate = (bool)GPIO_ReadInputPin(BTN_PORT, BTN_PIN);
+        //BTNstate = READ(BTN);
 
         if (lastBTNstate == 0 && BTNstate == 1) {
             led_out += 1;
@@ -37,14 +38,14 @@ int main(void) {
 
         // Nastavení výstupů pro LED
         if (led_out == 1) {
-            GPIO_WriteHigh(GPIOB, GPIO_PIN_2);
-            GPIO_WriteLow(GPIOB, GPIO_PIN_4);
+            HIGH(LED1);
+            LOW(LED3);
         } else if (led_out == 2) {
-            GPIO_WriteHigh(GPIOB, GPIO_PIN_3);
-            GPIO_WriteLow(GPIOB, GPIO_PIN_2);
+            HIGH(LED2);
+            LOW(LED1);
         } else {
-            GPIO_WriteHigh(GPIOB, GPIO_PIN_4);
-            GPIO_WriteLow(GPIOB, GPIO_PIN_3);
+            HIGH(LED3);
+            LOW(LED2);
         }
         lastBTNstate = BTNstate;
     }
